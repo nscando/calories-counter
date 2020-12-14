@@ -2,10 +2,28 @@ const compose = (...functions) => data =>
   functions.reduceRight((value, func) => func(value), data)
 
 
+
+const attrsToString = (obj = {}) => {
+  const keys = Object.keys(obj)
+  const attrs = []
+
+  for (let i = 0; i < keys.length; i++) {
+    let attr = keys[i]
+    attr.push(`${attr}="${obj[attr]}"`);
+  }
+  const string = attrs.join('') //string with elements in the list
+  return string
+}
+
+const tag = t => `<${t}>${content}</${t}>`
+
+
 let description = $('#description')
 let calories = $('#calories')
 let carbs = $('#carbs')
 let protein = $('#protein')
+
+let list = []
 
 description.keypress(() => {
   description.removeClass('is-invalid');
@@ -33,7 +51,26 @@ const validateInputs = () => {
     calories.val() &&
     carbs.val() &&
     protein.val()
-  ) console.log('ok');
+  ) add()
 
 };
 
+const add = () => {
+  const newItem = {
+    description: description.val(),
+    calories: parseInt(calories.val()),
+    carbs: parseInt(carbs.val()),
+    protein: parseInt(protein.val())
+  }
+
+  list.push(newItem);
+  cleanInputs();
+  console.log(list);
+}
+
+const cleanInputs = () => {
+  description.val('')
+  calories.val('')
+  carbs.val('')
+  protein.val('')
+}
