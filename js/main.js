@@ -9,11 +9,16 @@ const attrsToString = (obj = {}) => {
 
   for (let i = 0; i < keys.length; i++) {
     let attr = keys[i]
-    attr.push(`${attr}="${obj[attr]}"`);
+    attrs.push(`${attr}="${obj[attr]}"`)
   }
-  const string = attrs.join('') //string with elements in the list
+
+  const string = attrs.join('')
+
   return string
 }
+
+const tagAttrs = obj => (content = '') =>
+  `<${obj.tag}${obj.attrs ? ' ' : ''}${attrToString(obj.attrs)}>${content}</${obj.tag}>`
 
 const tag = t => `<${t}>${content}</${t}>`
 
