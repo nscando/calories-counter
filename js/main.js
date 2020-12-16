@@ -29,13 +29,9 @@ const tag = t => {
   }
 }
 
-//VARIABLES - TABLE CREATION
+//VARIABLES - TABLE integration
 const tableRowTag = tag('tr')
-const tableCell = tag('tr')
-
 const tableRow = items => compose(tableRowTag, tableCells)(items)
-
-
 const tableCell = tag('td')
 const tableCells = items => items.map(tableCell).join('')
 
@@ -64,10 +60,10 @@ calories.keypress(() => {
 
 //VALIDATIONS INPUTS
 const validateInputs = () => {
-  description.val() ? '' : description.addClass('is-invalid');
-  calories.val() ? '' : calories.addClass('is-invalid');
-  carbs.val() ? '' : carbs.addClass('is-invalid');
-  protein.val() ? '' : protein.addClass('is-invalid');
+  description.val() ? '' : description.addClass('is-invalid')
+  calories.val() ? '' : calories.addClass('is-invalid')
+  carbs.val() ? '' : carbs.addClass('is-invalid')
+  protein.val() ? '' : protein.addClass('is-invalid')
 
   if (
     description.val() &&
@@ -75,10 +71,9 @@ const validateInputs = () => {
     carbs.val() &&
     protein.val()
   ) add()
+}
 
-};
-
-//ADD VALUES INPUTS
+//ADD NEW OBJECT -  VALUES INPUTS
 const add = () => {
   const newItem = {
     description: description.val(),
@@ -89,8 +84,24 @@ const add = () => {
 
   list.push(newItem);
   cleanInputs();
-  console.log(list);
+  updateTotals();
+  renderItems();
 }
+
+const updateTotals = () => {
+  let calories = 0, carbs = 0, protein = 0;
+
+  list.map(item => {
+    calories += item.calories,
+      carbs += item.carbs,
+      protein += item.protein
+  })
+
+  $('#totalCalories').text(calories)
+  $('#totalCarbs').text(carbs)
+  $('#totalProtein').text(protein)
+}
+
 
 //CLEAN INPUTS
 const cleanInputs = () => {
@@ -98,4 +109,13 @@ const cleanInputs = () => {
   calories.val('')
   carbs.val('')
   protein.val('')
+}
+
+
+const renderItems = () => {
+  $('tbody').empty()
+
+  list.map(item => {
+    $('tbody').append(tableRow([item.description, item.calories, item.carbs, item.protein]))
+  })
 }
