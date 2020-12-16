@@ -2,7 +2,7 @@ const compose = (...functions) => data =>
   functions.reduceRight((value, func) => func(value), data)
 
 
-
+//VARIABLES - ATRIBUTES CREATION
 const attrsToString = (obj = {}) => {
   const keys = Object.keys(obj)
   const attrs = []
@@ -17,10 +17,27 @@ const attrsToString = (obj = {}) => {
   return string
 }
 
+//VARIABLES - TAGS CREATION
 const tagAttrs = obj => (content = '') =>
-  `<${obj.tag}${obj.attrs ? ' ' : ''}${attrToString(obj.attrs)}>${content}</${obj.tag}>`
+  `<${obj.tag}${obj.attrs ? ' ' : ''}${attrsToString(obj.attrs)}>${content}</${obj.tag}>`
 
-const tag = t => `<${t}>${content}</${t}>`
+const tag = t => {
+  if (typeof t === 'string') {
+    tagAttrs({ tag: t })
+  } else {
+    tagAttrs(t)
+  }
+}
+
+//VARIABLES - TABLE CREATION
+const tableRowTag = tag('tr')
+const tableCell = tag('tr')
+
+const tableRow = items => compose(tableRowTag, tableCells)(items)
+
+
+const tableCell = tag('td')
+const tableCells = items => items.map(tableCell).join('')
 
 
 let description = $('#description')
@@ -30,6 +47,7 @@ let protein = $('#protein')
 
 let list = []
 
+//INVALIDATION WHEN INPUT IS EMPTY
 description.keypress(() => {
   description.removeClass('is-invalid');
 });
@@ -44,7 +62,7 @@ calories.keypress(() => {
   calories.removeClass('is-invalid');
 });
 
-
+//VALIDATIONS INPUTS
 const validateInputs = () => {
   description.val() ? '' : description.addClass('is-invalid');
   calories.val() ? '' : calories.addClass('is-invalid');
@@ -60,6 +78,7 @@ const validateInputs = () => {
 
 };
 
+//ADD VALUES INPUTS
 const add = () => {
   const newItem = {
     description: description.val(),
@@ -73,6 +92,7 @@ const add = () => {
   console.log(list);
 }
 
+//CLEAN INPUTS
 const cleanInputs = () => {
   description.val('')
   calories.val('')
